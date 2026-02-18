@@ -1,0 +1,25 @@
+* cljs switch proxy
+
+切换代理设置的 chrome 浏览器插件，使用 Clojurescript 开发。
+
+** 使用
+
+编译 css 和 js，并生成 dist 目录：
+
+#+begin_src sh
+  make build
+  make dist
+#+end_src
+
+在 chrome 插件管理页面 chrome://extensions 加载未打包的扩展程序，选择 dist 目录。
+
+** 开发
+
+#+begin_src sh
+  make css-watch
+  make cljs-watch
+#+end_src
+
+在两个 shell 中分别执行以上命令，修改源文件时自动重新生成 css 和 js。
+
+打开 http://localhost:8080/portfolio.html 预览组件。
