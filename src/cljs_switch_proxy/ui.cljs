@@ -1,4 +1,30 @@
-(ns cljs-switch-proxy.ui)
+(ns cljs-switch-proxy.ui
+  (:require [clojure.string :as str]))
+
+(defmulti current-proxy->text
+  "Convert current proxy settings to text."
+  (fn [current-proxy] (aget current-proxy "mode")))
+
+(defmethod current-proxy->text :default [current-proxy]
+  (js/JSON.stringify current-proxy))
+
+(defmethod current-proxy->text "system" [_current-proxy]
+  "system")
+
+(defmethod current-proxy->text "fixed_servers" [current-proxy]
+  (if-let [server (aget current-proxy "rules" "singleProxy")]
+    (let [scheme (aget server "scheme")
+          host (aget server "host")
+          port (aget server "port")]
+      (str scheme "://" host ":" port))
+    (js/JSON.stringify current-proxy)))
+
+(defn render-current-proxy
+  "Render current proxy."
+  [current-proxy]
+  [:div
+   {:class ["border-4" "border-yellow-500" "bg-yellow-100" "text-yellow-500" "font-semibold" "test-sm" "p-4" "rounded-lg"]}
+   (current-proxy->text current-proxy)])
 
 (defn render-switch-button
   "Render switch button."
@@ -43,7 +69,9 @@
       (render-delete-button context proxy)
       (render-switch-button context proxy)]]))
 
-(defmethod render-proxy :input [context _proxy]
+(defn render-input-proxy
+  "Render input proxy."
+  [context]
   (let [{:keys [dispatch-fn]} context]
     [:form
      {:class ["border-l-4" "border-green-500" "bg-green-100" "p-4" "flex" "justify-between" "items-center" "rounded-lg"]
@@ -60,30 +88,23 @@
 
 (defn render-proxy-list
   "Render proxy list."
-  [context urls]
-  (let [proxies (concat
-                 [{:type :system}]
-                 (->> urls (map (fn [url] {:type :server :url url})))
-                 [{:type :input}])]
-    [:ul
-     {:class ["space-y-2"]}
-     (->> proxies
-          (map
-           (fn [proxy]
-             [:li
-              (render-proxy context proxy)])))]))
-
-(defn render-current-proxy
-  "Render current proxy."
-  [current-proxy]
-  [:div
-   {:class ["border-4" "border-yellow-500" "bg-yellow-100" "text-yellow-500" "font-semibold" "test-sm" "p-4" "rounded-lg"]}
-   [:code (js/JSON.stringify current-proxy)]])
-
-(defn render-page
   [context current-proxy urls]
-  [:div
+  [:ul
    {:class ["space-y-2"]}
    (when (some? current-proxy)
-     (render-current-proxy current-proxy))
-   (render-proxy-list context urls)])
+     [:li (render-current-proxy current-proxy)])
+   [:li (render-proxy context {:type :system})]
+   (->> urls
+        (map
+         (fn [url]
+           [:li
+            (render-proxy context {:type :server :url url})])))
+   [:li (render-input-proxy context)]])
+
+(defn render-app
+  "Render app."
+  [context db]
+  (let [{:keys [current-proxy urls]} db]
+    [:div
+     {:class ["w-[400px]" "p-4"]}
+     (render-proxy-list context current-proxy urls)]))

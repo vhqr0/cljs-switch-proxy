@@ -3,6 +3,9 @@
             [portfolio.ui :as portfolio]
             [cljs-switch-proxy.ui :as ui]))
 
+(defscene current-proxy
+  (ui/render-current-proxy #js {"mode" "system"}))
+
 (defscene switch-button
   (ui/render-switch-button
    {:dispatch-fn (comp js/alert pr-str)} {:type :system}))
@@ -18,18 +21,12 @@
   (ui/render-proxy {:dispatch-fn (comp js/alert pr-str)} {:type :server :url "socks5://localhost:1080"}))
 
 (defscene input-proxy
-  (ui/render-proxy {:dispatch-fn (comp js/alert pr-str)} {:type :input}))
+  (ui/render-input-proxy {:dispatch-fn (comp js/alert pr-str)}))
 
 (defscene proxy-list
-  (ui/render-proxy-list {:dispatch-fn (comp js/alert pr-str)} ["socks5://localhost:1080"]))
-
-(defscene current-proxy
-  (ui/render-current-proxy #js {"type" "socks5" "host" "localhost" "port" "1080"}))
-
-(defscene page
-  (ui/render-page
+  (ui/render-proxy-list
    {:dispatch-fn (comp js/alert pr-str)}
-   #js {"type" "socks5" "host" "localhost" "port" "1080"}
+   #js {"mode" "system"}
    ["socks5://localhost:1080"]))
 
 (defn main

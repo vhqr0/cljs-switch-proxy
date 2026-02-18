@@ -13,7 +13,7 @@
     (add-watch db-atom ::render
                (fn [_ _ _ db]
                  (let [{:keys [current-proxy urls]} db]
-                   (rd/render dom (ui/render-page context current-proxy urls)))))
+                   (rd/render dom (ui/render-app context db)))))
     (a/go-loop []
       (when-let [event (a/<! ch)]
         (prn event)
