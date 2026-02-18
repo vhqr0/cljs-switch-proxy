@@ -1,7 +1,12 @@
 {
-  "manifest_version": 3,
-  "name": "CLJS Switch Proxy",
-  "version": "1.0.0",
-  "permissions": ["storage", "proxy"],
-  "action": { "default_popup": "popup.html" }
+    "manifest_version": 3,
+    "name": "CLJS Switch Proxy",
+    "version": "1.0.0",
+    "permissions": ["storage", "proxy"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "img/favicon-16x16.png"
+        }
+    }
 }
