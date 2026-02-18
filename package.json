@@ -1,0 +1,13 @@
+{
+  "name": "cljs-switch-proxy",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "shadow-cljs": "3.3.6"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "snabbdom": "3.5.1",
+    "tailwindcss": "^4.1.18"
+  }
+}
